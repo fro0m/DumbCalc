@@ -1,0 +1,2 @@
+#include "journalitem.h"
+

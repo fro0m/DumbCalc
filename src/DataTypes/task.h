@@ -7,7 +7,6 @@ struct Task {
     double m_operandA;
     double m_operandB;
     int m_operationsComplexityInSec /*= 20*/; // MSVC2015 does not support default initializers when making aggregate inicialization (
-    bool m_ready /*= false*/; // means that operands and sign is set
 };
 
 #endif // TASK_H

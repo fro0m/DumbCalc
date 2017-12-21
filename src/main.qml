@@ -1,71 +1,108 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
+import "qrc:/UI/Components"
+import "UI"
 
 ApplicationWindow {
     id: window
     visible: true
-    //    width: 600
-    //    height: 400
     title: qsTr("DumbCalc - STC")
-
     header: ToolBar {
         id: toolBar
-        contentHeight: toolButton.implicitHeight
-        contentWidth: window.width
+        height: 40
+        //        contentHeight: toolButton.implicitHeight
+        //        contentWidth: window.width
         Row {
+            id: toolBarLayout
             anchors.fill: parent
             spacing: 6
-            ToolButton {
-                id: toolButton
-                text: /*stackView.depth > 1 ? "\u25C0" :*/ "\u2630"
-                font.pixelSize: Qt.application.font.pixelSize * 1.6
-                enabled: false
-            }
             Label {
                 id: calcLabelId
-                width: window.width / 2 - toolButton.width
+                width: toolBarLayout.width / 2
                 height: toolBar.height
                 verticalAlignment: Label.AlignVCenter
                 horizontalAlignment: Label.AlignHCenter
-                text: "Обычный"//stackView.currentItem.title
+                text: "Обычный"
+                Delimiter {color: "black"}
             }
             Label {
                 id: journaLabellId
-                width: window.width  / 2
+                width: toolBarLayout.width / 2
                 height: toolBar.height
                 verticalAlignment: Label.AlignVCenter
                 horizontalAlignment: Label.AlignHCenter
-                text: "Журнал"//stackView.currentItem.title
-
+                text: "Журнал"
             }
         }
-
-
     }
-
     Row {
         id: mainContentItem
         anchors.fill: parent
+
         Column {
-            id: calc
+            id: calcColumn
             height: parent.height
             width: parent.width / 2
+            Calculator {
+                height: parent.height
+                width: parent.width
+            }
         }
         Column {
-            id: journal
+            id: journalColumn
             height: parent.height
             width: parent.width / 2
             ListView {
                 id: journalList
+                height: parent.height * 0.8
+                width: parent.width
+                verticalLayoutDirection: ListView.BottomToTop
                 model: journalModel
+                clip: true
                 delegate: JournalItem {
-                    txt: text
+                    height: journalList.height * 0.15
+                    width: journalList.width
+                    txt: index + 1 + ". " + text
                     clr: color
                 }
+                Connections {
+                    target: journalModel
+                    onRowsInserted: {
+                        //journalList.contentY = 0
+                        journalList.positionViewAtEnd()
+                        //journalList.positionViewAtIndex(journalList.count - 1, ListView.End);
+                    }
+                }
+                Rectangle {
+                    anchors.top: parent.bottom
+                    width: parent.width
+                    height: 1
+                    color: "transparent"
+                    border.color: "black"
+                }
+            }
+            Row {
+                id: queueSizes
+                height: parent.height * 0.2
+                width: parent.width
+                Label {
+                    height: parent.height
+                    width: parent.width / 2
+                    font.pixelSize: 9
+                    horizontalAlignment: Label.AlignHCenter
+                    text: "Размер\nочереди запросов\n" + journalModel.requestsSize
+                }
+                Label {
+                    height: parent.height
+                    width: parent.width / 2
+                    font.pixelSize: 9
+                    horizontalAlignment: Label.AlignHCenter
+                    text: "Размер\nочереди результатов\n" + journalModel.resultsSize
+                }
+
             }
         }
     }
-
     Component.onCompleted: {
         var windowGeometry = settingsManager.windowRect
         if (windowGeometry.x !== 0 && windowGeometry.y !== 0) {
@@ -74,11 +111,6 @@ ApplicationWindow {
         }
         window.width = windowGeometry.width
         window.height = windowGeometry.height
-
-        journalModel.submitToNumber("545.33")
-        journalModel.pressMinus()
-        journalModel.submitToNumber("222")
-        journalModel.pressCalculate()
     }
     Component.onDestruction: {
         settingsManager.setWindowRect(Qt.rect(window.x, window.y, window.width, window.height))

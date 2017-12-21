@@ -18,9 +18,6 @@ class JournalModel : public QAbstractListModel
     Q_PROPERTY(double operandA READ operandA WRITE setOperandA NOTIFY operandAChanged)
     Q_PROPERTY(double operandB READ operandB WRITE setOperandB NOTIFY operandBChanged)
     Q_PROPERTY(CalcLib::TypeWork typeWork READ typeWork WRITE setTypeWork NOTIFY typeWorkChanged)
-    // need for understanding if operands are already charged
-    Q_PROPERTY(bool ready READ ready WRITE setReady NOTIFY readyChanged)
-
     Q_PROPERTY(int requestsSize READ requestsSize NOTIFY requestsSizeChanged)
     Q_PROPERTY(int resultsSize READ resultsSize NOTIFY resultsSizeChanged)
 private:
@@ -37,8 +34,8 @@ public: // Abstract Model interface
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
+    //QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 public: // task control
-//    Q_INVOKABLE void pressDigit(int digit);
     Q_INVOKABLE void pressMinus();
     Q_INVOKABLE void pressPlus();
     Q_INVOKABLE void pressDivide();
@@ -46,7 +43,7 @@ public: // task control
     Q_INVOKABLE void pressCalculate();
     Q_INVOKABLE void submitToNumber(QString digit);
     Q_INVOKABLE void reset();
-public: // journal items management
+private: // journal items management
     void addJournalItem(const JournalItem &item);
 public: // getters
     CalcLib::TypeWork typeWork() const
@@ -62,11 +59,6 @@ public: // getters
     double operandA() const
     {
         return m_currentTask.m_operandA;
-    }
-
-    bool ready() const
-    {
-        return m_currentTask.m_ready;
     }
 
     int requestsSize() const
@@ -86,16 +78,12 @@ public slots:
 
     void setOperandA(double operandA);
 
-    void setReady(bool ready);
-
 signals:
     void typeWorkChanged(CalcLib::TypeWork typeWork);
 
     void operandBChanged(double operandB);
 
     void operandAChanged(double operandA);
-
-    void readyChanged(bool ready);
 
     void requestsSizeChanged(int requestsSize);
 

@@ -9,10 +9,10 @@ QueuesWatcher::QueuesWatcher(QObject *parent) : QObject(parent)
 {
     auto thread = ThreadManager::instance()->getThread2();
     Q_ASSERT(thread->isRunning());
-    moveToThread(thread); // this can run in GUI thread but the task asks it to be separate
+    moveToThread(thread);
     thread->setPriority(QThread::LowPriority);
     qDebug() << "QueuesWatcher's thread is " << QObject::thread();
-    timer.start(50);
+    timer.start(50); // updating every 50 msec
     connect(&timer, &QTimer::timeout, [this]{
         int size = QueueRequests::instance()->size();
         if (size != requestsSize()) {

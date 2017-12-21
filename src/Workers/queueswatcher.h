@@ -13,11 +13,11 @@ class QueuesWatcher : public QObject
     Q_PROPERTY(int resultsSize READ resultsSize WRITE setResultsSize NOTIFY resultsSizeChanged)
 public:
     explicit QueuesWatcher(QObject *parent = nullptr);
+public:
     int requestsSize() const
     {
         return m_requestsSize;
     }
-
     int resultsSize() const
     {
         return m_resultsSize;

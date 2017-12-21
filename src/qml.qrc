@@ -1,7 +1,12 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>qtquickcontrols2.conf</file>
         <file>JournalItem.qml</file>
+        <file>UI/Components/Delimiter.qml</file>
+        <file>UI/Calculator.qml</file>
+        <file>UI/Calculator/CalculatorScreen.qml</file>
+        <file>UI/Calculator/CalculatorInput.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>UI/Calculator/CalcButton.qml</file>
     </qresource>
 </RCC>
